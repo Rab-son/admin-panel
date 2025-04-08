@@ -116,9 +116,8 @@ const navigationItems = [
 ]
 
 const currentPage = computed(() => {
-  return (
-    route.name?.toString().charAt(0).toUpperCase() + route.name?.toString().slice(1) || 'Dashboard'
-  )
+  const routeName = route.name?.toString() || 'Dashboard'
+  return routeName.charAt(0).toUpperCase() + routeName.slice(1)
 })
 
 const handleLogout = () => {
