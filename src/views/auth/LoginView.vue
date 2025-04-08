@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Admin Panel Login</h2>
@@ -16,6 +16,8 @@
               required
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Email address"
+              :class="{ 'border-red-500': error }"
+              autocomplete="email"
             />
           </div>
           <div>
@@ -28,14 +30,20 @@
               required
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
+              :class="{ 'border-red-500': error }"
+              autocomplete="current-password"
             />
           </div>
+        </div>
+
+        <div v-if="error" class="text-red-500 text-sm text-center">
+          {{ error }}
         </div>
 
         <div>
           <button
             type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             :disabled="loading"
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -46,6 +54,12 @@
             </span>
             {{ loading ? 'Signing in...' : 'Sign in' }}
           </button>
+        </div>
+
+        <div class="text-sm text-center text-gray-600">
+          <p>Demo credentials:</p>
+          <p>Email: rabsonadmin@gmail.com</p>
+          <p>Password: admin123</p>
         </div>
       </form>
     </div>
@@ -61,16 +75,34 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
+const error = ref('')
+
+// For demo purposes, we'll use these credentials
+const DEMO_EMAIL = 'rabsonadmin@gmail.com'
+const DEMO_PASSWORD = 'admin123' // In a real app, you would never hardcode passwords
 
 const handleLogin = async () => {
   loading.value = true
+  error.value = ''
+
   try {
-    // TODO: Implement actual authentication
-    // For now, we'll just simulate a successful login
+    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    router.push('/dashboard')
-  } catch (error) {
-    console.error('Login failed:', error)
+
+    // Check credentials
+    if (email.value === DEMO_EMAIL && password.value === DEMO_PASSWORD) {
+      // Store authentication state
+      localStorage.setItem('isAuthenticated', 'true')
+      localStorage.setItem('user', JSON.stringify({ email: email.value, role: 'admin' }))
+
+      // Redirect to dashboard
+      router.push('/dashboard')
+    } else {
+      error.value = 'Invalid email or password. Please check the demo credentials below.'
+    }
+  } catch (err) {
+    error.value = 'An error occurred while signing in. Please try again.'
+    console.error('Login error:', err)
   } finally {
     loading.value = false
   }

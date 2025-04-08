@@ -41,13 +41,16 @@ const router = createRouter({
 
 // Navigation guard
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated')
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
 
   if (to.meta.requiresAuth && !isAuthenticated) {
+    // If route requires auth and user is not authenticated, redirect to login
     next('/login')
   } else if (to.path === '/login' && isAuthenticated) {
+    // If user is authenticated and tries to access login page, redirect to dashboard
     next('/dashboard')
   } else {
+    // Otherwise proceed normally
     next()
   }
 })

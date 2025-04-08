@@ -8,10 +8,7 @@ import HelloWorld from './components/HelloWorld.vue'
 </template>
 
 <style>
-@import '@/assets/base.css';
-@import '@/assets/main.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 </style>
